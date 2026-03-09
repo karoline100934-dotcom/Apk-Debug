@@ -2,7 +2,7 @@ name: Android CI
 
 on:
   push:
-    branches: [ "main", "master" ]
+    branches: [ "main" ]
 
 jobs:
   build:
@@ -16,17 +16,16 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    # Trik buat yang gak punya laptop: Install Gradle manual di runner
     - name: Setup Gradle
-      uses: gradle/gradle-build-action@v2
+      uses: gradle/actions/setup-gradle@v3
       with:
         gradle-version: 8.1.1
 
     - name: Build Debug APK
-      run: gradle assembleDebug # Pakai 'gradle', bukan './gradlew'
+      run: gradle assembleDebug
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
-        name: app-debug-apk
-        path: app/build/outputs/apk/debug/app-debug.apk
+        name: My-Debug-APK
+        path: app/build/outputs/apk/debug/*.apk
