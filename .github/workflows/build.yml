@@ -3,31 +3,29 @@ name: Android CI
 on:
   push:
     branches: [ "main", "master" ]
-  pull_request:
-    branches: [ "main", "master" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
-        cache: gradle
 
-    - name: Grant Execute Permission for Gradlew
-      run: chmod +x gradlew
+    # Trik buat yang gak punya laptop: Install Gradle manual di runner
+    - name: Setup Gradle
+      uses: gradle/gradle-build-action@v2
+      with:
+        gradle-version: 8.1.1
 
     - name: Build Debug APK
-      run: ./gradlew assembleDebug
+      run: gradle assembleDebug # Pakai 'gradle', bukan './gradlew'
 
-    - name: Upload APK Artifact
+    - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
         name: app-debug-apk
